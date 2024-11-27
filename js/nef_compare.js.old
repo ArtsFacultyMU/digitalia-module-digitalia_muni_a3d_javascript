@@ -1,0 +1,53 @@
+const BLOCK_SELECTOR = "#block-islandora-muni-a3dnefentitycomparison";
+const TEXT_SELECTOR = ".content a.entity-comparison-a3d-nef-entity-comparison";
+const COMPARISON_URL_SNIPPET = "a3d-nef-entity-comparison";
+
+
+function toggle_comparison_visibility()
+{
+	const compare_block = document.querySelector(BLOCK_SELECTOR);
+	const compare_block_text = compare_block.querySelector(TEXT_SELECTOR);
+
+	if (window.location.href.search(COMPARISON_URL_SNIPPET) != -1) {
+		compare_block.classList.add("hidden");
+	}
+	
+	if (compare_block_text.innerHTML == "Compare (0)") {
+	    compare_block.classList.remove("fade-in");
+	    compare_block.classList.add("fade-out");
+	} else {
+	    compare_block.classList.add("fade-in");
+	    compare_block.classList.remove("fade-out");
+	}
+
+	apply_styles();
+}
+
+
+// borrowed/stolen from https://stackoverflow.com/questions/10783463/javascript-detect-ajax-requests
+function new_xhr() {
+	let real_xhr = new old_xhr();
+	real_xhr.addEventListener("loadend", function() {
+		if (real_xhr.status == 200){
+			toggle_comparison_visibility();
+		}
+	}, false);
+
+	return real_xhr;
+}
+
+function apply_styles()
+{
+	const compare_block = document.querySelector(BLOCK_SELECTOR);
+	compare_block.classList.add("compare-floating");
+
+	const compare_block_text = compare_block.querySelector(TEXT_SELECTOR);
+	compare_block_text.classList.add("button");
+}
+
+let old_xhr = window.XMLHttpRequest;
+
+window.XMLHttpRequest = new_xhr;
+
+apply_styles();
+toggle_comparison_visibility();
