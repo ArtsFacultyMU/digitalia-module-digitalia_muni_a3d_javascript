@@ -1,8 +1,6 @@
 const RESULTS_PER_PAGE = drupalSettings.digitaliaMuniA3dJavascript.calculatePosition['items_per_page'];
 const DISPLAY_FORMAT = drupalSettings.digitaliaMuniA3dJavascript.calculatePosition['display_format'];
 
-console.log(drupalSettings.digitaliaMuniA3dJavascript.calculatePosition);
-
 let separator = "&";
 if (!location.search || location.search.length === 0) {
     separator = "?";
