@@ -1,0 +1,8 @@
+calculate_position_grid:
+  js:
+    js/calculate_position.js: {}
+  dependencies:
+    - core/drupalSettings
+model_view:
+  js:
+    js/model_view.js: {}
