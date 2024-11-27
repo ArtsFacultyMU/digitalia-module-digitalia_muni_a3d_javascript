@@ -39,7 +39,7 @@ function init(element) {
 
 		// center camera on object
 		mesh.geometry.computeBoundingBox();
-		console.log(mesh.geometry.boundingBox);
+		//console.log(mesh.geometry.boundingBox);
 		mesh.geometry.boundingBox.getCenter(controls.target);
 		controls.update();
 

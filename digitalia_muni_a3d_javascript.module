@@ -13,6 +13,10 @@ function digitalia_muni_a3d_javascript_views_pre_render(ViewExecutable $view) {
           'display_format' => $view->getDisplay()->getOption('style')['type'],
     ];
   }
+
+  if (isset($view) && $view->getDisplay()->getPlugin('query')->query()->hasTag('digitalia_model_view')) {
+    $view->element['#attached']['library'][] = 'digitalia_muni_a3d_javascript/model_view';
+  }
 }
 
 ?>
