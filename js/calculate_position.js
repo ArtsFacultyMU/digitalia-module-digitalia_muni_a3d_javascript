@@ -32,7 +32,7 @@ if (DISPLAY_FORMAT == "grid") {
             tags = items[j].getElementsByClassName('field-content');
             for (let k = 0; k < tags.length; k++) {
                     if (tags[k].firstChild) {
-                        tags[k].firstChild.setAttribute('href', link);
+                        tags[k].children[0].setAttribute('href', link);
                     }
             }
             counter += 1;

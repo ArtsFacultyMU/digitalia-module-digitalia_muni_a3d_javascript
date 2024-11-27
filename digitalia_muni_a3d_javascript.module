@@ -6,7 +6,7 @@ use Drupal\views\ViewExecutable;
 * Implements hook_views_pre_render().
 */
 function digitalia_muni_a3d_javascript_views_pre_render(ViewExecutable $view) {
-  if (isset($view) && (strpos($view->storage->id(), 'search_index') !== false)) {
+  if (isset($view) && $view->getDisplay()->getPlugin('query')->query()->hasTag('digitalia_calculate_paged')) {
     $view->element['#attached']['library'][] = 'digitalia_muni_a3d_javascript/calculate_position_grid';
     $view->element['#attached']['drupalSettings']['digitaliaMuniA3dJavascript']['calculatePosition'] = [
           'items_per_page' => $view->getItemsPerPage(),
