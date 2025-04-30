@@ -3,6 +3,8 @@ calculate_position_grid:
     js/calculate_position.js: {}
   dependencies:
     - core/drupalSettings
+    - core/drupal
+    - core/once
 model_view:
   js:
     js/model_view.js:
