@@ -2,40 +2,76 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
 const WIDTH = 640;
 const HEIGHT = 640;
+const SUPPORTED_FORMATS = ["obj", "ply"]
 
 const render_parents = document.querySelectorAll(".models .views-col");
 
+let extension;
+let ondemand_button;
 for (let i = 0; i < render_parents.length; ++i) {
-	init(render_parents[i]);
+  extension = render_parents[i].querySelector("a.model-3d-link").getAttribute("href").split(".").pop();
+  ondemand_button = render_parents[i].querySelector(".ondemand-render");
+
+  if ( SUPPORTED_FORMATS.includes(extension) ) {
+    ondemand_button.addEventListener("click", function() {
+      ondemand_button.classList.remove("button");
+      ondemand_button.classList.add("hidden");
+      init(render_parents[i]);
+    } ); 
+    ondemand_button.classList.add("button");
+  } else {
+    ondemand_button.classList.remove("button");
+    ondemand_button.classList.add("hidden");
+  }
+
 }
 
 function init(element) {
 	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera( 50, element.clientWidth / HEIGHT, 0.0001, 2 );
+	const camera = new THREE.PerspectiveCamera( 50, element.clientWidth / HEIGHT, 0.0001, 500 );
 	const renderer = new THREE.WebGLRenderer();
 	const download_element = element.querySelector("a.model-3d-link");
 	const file_location = download_element.getAttribute("href");
-	let bb = new THREE.Box3();
+  const extension = file_location.split(".").pop();
 
-	scene.background = new THREE.Color( 0xfafafa );
+  let loader;
+
+  switch(extension) {
+    case "obj":
+      loader = new OBJLoader();
+      break;
+    case "ply":
+      loader = new PLYLoader();
+      break;
+    default:
+      return;
+  }
+
 
 	const light = new THREE.AmbientLight( 0x404040, 10 );
 	scene.add( light );
+	scene.background = new THREE.Color( 0xfafafa );
 
 	const controls = new OrbitControls( camera, renderer.domElement );
 
-	//const loader = new GLTFLoader();
-	const loader = new PLYLoader()
-	loader.load( file_location, async function ( ply ) {
-		ply.computeVertexNormals();
-		//const material = new THREE.MeshStandardMaterial( { color: 0xeeeeee, flatShading: true } );
+	loader.load( file_location, async function ( model ) {
 		const material = new THREE.MeshMatcapMaterial( {color: 0xeeeeee });
-		//const material = new THREE.MeshPhysicalMaterial( {color: 0xEEEEEE });
-		const mesh = new THREE.Mesh( ply, material );
-		await renderer.compileAsync( mesh, camera, scene );
+    let mesh;
+    console.log(model);
+
+    if (extension == "ply") {
+		  model.computeVertexNormals();
+		  mesh = new THREE.Mesh( model, material );
+    }
+
+    if (extension == "obj") {
+      mesh = model.getObjectByProperty("type", "Mesh");
+      mesh.material = material;
+    }
 
 		// center camera on object
 		mesh.geometry.computeBoundingBox();
@@ -43,12 +79,7 @@ function init(element) {
 		mesh.geometry.boundingBox.getCenter(controls.target);
 		controls.update();
 
-		//model.traverse( ( mesh ) => {
-		//	mesh.material = new THREE.MeshMatcapMaterial( {color: 0xEEEEEE });
-		//} );
-
 		scene.add( mesh );
-
 		render(renderer, scene, camera);
 	} );
 	
@@ -58,8 +89,6 @@ function init(element) {
 		MIDDLE: THREE.MOUSE.PAN,
 		RIGHT: THREE.MOUSE.ROTATE,
 	}
-
-	//camera.position.z = 0.125;
 
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( element.clientWidth, HEIGHT );
