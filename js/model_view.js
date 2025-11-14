@@ -93,7 +93,7 @@ function init(element) {
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( element.clientWidth, HEIGHT );
 	renderer.gammaOutput = true;
-	download_element.parentNode.insertBefore( renderer.domElement, download_element );
+	download_element.parentNode.appendChild( renderer.domElement, download_element );
 
 
 	controls.update();
