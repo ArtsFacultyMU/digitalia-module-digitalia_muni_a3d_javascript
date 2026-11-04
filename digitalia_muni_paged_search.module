@@ -1,0 +1,18 @@
+<?php
+
+use Drupal\views\ViewExecutable;
+
+/**
+* Implements hook_views_pre_render().
+*/
+function digitalia_muni_paged_search_views_pre_render(ViewExecutable $view) {
+  if (isset($view) && $view->getDisplay()->getPlugin('query')->query()->hasTag('digitalia_calculate_paged')) {
+    $view->element['#attached']['library'][] = 'digitalia_muni_paged_search/calculate_position_grid';
+    $view->element['#attached']['drupalSettings']['digitaliaMuniPagedSearch']['calculatePosition'] = [
+          'items_per_page' => $view->getItemsPerPage(),
+          'display_format' => $view->getDisplay()->getOption('style')['type'],
+    ];
+  }
+}
+
+?>

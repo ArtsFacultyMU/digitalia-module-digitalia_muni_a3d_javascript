@@ -5,8 +5,3 @@ calculate_position_grid:
     - core/drupalSettings
     - core/drupal
     - core/once
-model_view:
-  js:
-    js/model_view.js:
-      attributes:
-        type: module

@@ -1,0 +1,5 @@
+name: Javascript for paged search
+type: module
+description: 'Javascript includes enabling paged search'
+package: digitalia
+core_version_requirement: ^10
