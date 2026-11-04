@@ -1,0 +1,5 @@
+name: Javascript for A3D
+type: module
+description: 'Javascript includes used on A3D platform'
+package: custom
+core_version_requirement: ^8 || ^9 || ^10
